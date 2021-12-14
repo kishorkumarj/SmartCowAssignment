@@ -1,5 +1,6 @@
-import json
+import json, csv
 from django.shortcuts import render, get_object_or_404
+from django.http import HttpResponse
 from rest_framework.generics import CreateAPIView, ListAPIView
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -69,7 +70,10 @@ class UploadImage(APIView):
 
     def post(self, request):
         file = request.FILES.get('file')
-        image_upload = models.TrafficImages.objects.create(image=file, user=request.user)
+        image_upload = models.TrafficImages.objects.create(
+                        image=file,
+                        user=request.user,
+                        file_name=file.name)
         return Response({'url': image_upload.image.url})
 
 
@@ -125,6 +129,34 @@ class GetImageAnnotations(APIView):
 
     def delete(self, request, image_id):
         pass
+
+# this will download all the annotations for an image.
+class DownloadCSV(APIView):
+    permission_classes = [permissions.AllowAny]
+    def get(self, request, image_id):
+        
+        image = get_object_or_404(models.TrafficImages, id=image_id)
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename="annotations.csv"'
+        writer = csv.DictWriter(response, fieldnames=['file_name', 'vehicle_type' ,'x_axis', 'y_axis', 'width', 'height'])
+
+        # get filename and coordinates of each annotation.
+        for annotation in image.annotations.all():
+            for entry in annotation.annotation_json:
+                try:
+                    writer.writerow({
+                        'file_name': annotation.image.file_name, 
+                        'vehicle_type': entry.get('data', {}).get('text', ''),
+                        'x_axis': round(entry.get('geometry', {}).get('x', 0), 2),
+                        'y_axis': round(entry.get('geometry', {}).get('y', 0), 2),
+                        'width': round(entry.get('geometry', {}).get('width', 0), 2),
+                        'height': round(entry.get('geometry', {}).get('height', 0), 2)
+                    })
+                except Exception:
+                    pass    
+        return response
+        
+
 
 class ResetAnnotations(APIView):
     def post(self, request, image_id):

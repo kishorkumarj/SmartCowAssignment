@@ -10,6 +10,7 @@ urlpatterns = [
     url(r'upload-image', apis.UploadImage.as_view()),
     url(r'images', apis.GetUploadedImages.as_view()),
     url(r'image/(?P<image_id>\d+)/rest-annotation', apis.ResetAnnotations.as_view()),
+    url(r'image/(?P<image_id>\d+)/download-csv', apis.DownloadCSV.as_view()),
     url(r'image/(?P<image_id>\d+)', apis.GetImageAnnotations.as_view()),
     url(r'my-annotations', apis.MyAnnotations.as_view()),
 ]

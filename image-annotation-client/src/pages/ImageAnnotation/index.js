@@ -1,8 +1,13 @@
 import React, { useState,  useEffect } from 'react';
-import { Card, Alert, Divider, Spin, Button, notification } from 'antd';
+import { Card, Alert, Divider, Spin, Button, notification, Tooltip } from 'antd';
 import { useParams } from 'react-router-dom';
 import Annotatoin from 'react-image-annotation';
-import { getImageAnnotationAPI, saveImageAnnotationAPI, resetAnnotationsAPI } from '../../utils/apis';
+import {
+  getImageAnnotationAPI,
+  saveImageAnnotationAPI,
+  resetAnnotationsAPI,
+  exportAnnotationCSV
+} from '../../utils/apis';
 import * as siteConfig from '.././../config';
 
 const removeTrailingSlash = (url) => {
@@ -96,9 +101,32 @@ const ImageAnnotation = () => {
     }
   }
 
+  const downloadCsv = async () => {
+    const res = await exportAnnotationCSV(imageId);
+    if (res.hasError){
+      notification.error({
+        message: 'Error',
+        description: 'Failed download annotation csv'
+      })
+    }
+
+    const url =  window.URL.createObjectURL(new Blob([res.data]));
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', 'annotations.csv');
+    document.body.appendChild(link);
+    link.click();
+  }
+
   return (
     <Card>
       <h2>Annotate Image
+        <span
+          style={{
+            fontSize: '14px',
+            color: '#cccccc'
+          }}
+        >&nbsp;(Once annotated on the image, please click save button.)</span>
         {annotations.length ? 
         <>
           <Button
@@ -113,6 +141,13 @@ const ImageAnnotation = () => {
         <Button
             className="btn-danger float-right" style={{marginRight: '5px'}}>Delete Image</Button>
         */}
+        <Tooltip
+        title="Note: Image will show only the annotation created by the current user, but the csv will have all the annotations created by all users.">
+          <Button
+            className='btn-info float-right'
+            style={{marginRight: '5px'}}
+            onClick={downloadCsv}>Download CSV</Button>
+        </Tooltip>
       </h2>
       <Divider style={{ marginTop: '5px'}}/>
       {loading ? <Spin />

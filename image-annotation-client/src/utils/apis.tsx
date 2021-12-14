@@ -44,3 +44,7 @@ export const resetAnnotationsAPI = async (imageId: number) => {
 export const getUserAnnotationsAPI = async () => {
   return await API.get(`api/v1/my-annotations`).catch(err => err);
 }
+
+export const exportAnnotationCSV = async (imageId: number) => {
+  return await API.get(`api/v1/image/${imageId}/download-csv`).catch(err =>  { return { hasError: true }});
+}
