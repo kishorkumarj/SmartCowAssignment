@@ -1,5 +1,5 @@
 const config = {
-  apiURL: process.env?.SERVER_URL || '/', //'http://localhost:8000/',
+  apiURL: process.env?.SERVER_URL || 'http://localhost:8000/', //'http://localhost:8000/',
   apiTimeout: 20000,
   baseUrl: '/'
 }

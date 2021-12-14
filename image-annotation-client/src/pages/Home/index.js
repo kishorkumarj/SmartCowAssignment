@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Card, Alert, Upload, Image, Divider, Button } from 'antd';
+import { Card, Alert, Upload, Image, Divider, Button, message } from 'antd';
 import { getUploadedImages } from '../../utils/apis';
 import * as constants from '../../utils/constants';
 import * as siteConfig from '../../config';
 import { NavLink } from 'react-router-dom';
 
-import { PlusOutlined, UploadOutlined } from '@ant-design/icons';
+import { UploadOutlined } from '@ant-design/icons';
 
 const removeTrailingSlash = (url) => {
   return url.endsWith('/') ? url.slice(0, -1) : url;
@@ -15,7 +15,7 @@ const baseURl = removeTrailingSlash(siteConfig.default.apiURL);
 
 const Home = () => {
 
-  const [fileList, setFileList] = useState([]);
+  const [reload, setReload] = useState(0);
   const [images, setImages]  = useState([])
 
   useEffect(() => {
@@ -24,38 +24,34 @@ const Home = () => {
       setImages(res?.data || []);
     }
     getImages()
-  }, [])
+  }, [reload])
 
-  const uploadButton = (
-    <div>
-      <PlusOutlined />
-      <div style={{ marginTop: 8 }}>Upload</div>
-    </div>
-  );
-
-  const onChange = ({ file }) => {
-    //setFileList(newFileList);
+  const onChange = (info) => {
+    if (info.file.status === 'done') {
+      message.info('upload successful')
+      setReload(reload + 1)
+    }else if (info.file.status === 'error') {
+      message.error('Failed to upload image');
+    }
   };
 
   return (
     <Card>
       <h2>
         Image Gallary
-        <Button
-          className='float-right btn-info'
-          icon={<UploadOutlined />}>Upload Images</Button>
+        <Upload
+          action={`${baseURl}/api/v1/upload-image`}
+          className='float-right'
+          multiple
+          onChange={onChange}
+          headers={{
+           'Authorization': 'Token ' + localStorage.getItem(constants.authToken),
+          }}>
+          <Button
+            className='float-right btn-info'
+            icon={<UploadOutlined />}>Upload Images</Button>
+        </Upload>
       </h2>
-      <Upload
-         action={`${baseURl}/api/v1/upload-image`}
-         headers={{
-          'Authorization': 'Token ' + localStorage.getItem(constants.authToken),
-        }}
-         listType="picture-card"
-         //fileList={fileList}
-         onChange={onChange}>
-        {fileList.length >= 8 ? null : uploadButton}
-      </Upload>
-
       <Divider style={{ marginTop: '5px'}}/>
 
       {images.length ? 
