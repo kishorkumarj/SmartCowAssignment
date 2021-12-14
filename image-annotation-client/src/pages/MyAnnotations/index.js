@@ -26,7 +26,14 @@ const MyAnnotations = () => {
 
   return (
     <Card>
-      <h2>My Annotations</h2>
+      <h2>My Annotations
+      <span
+          style={{
+            fontSize: '14px',
+            color: '#cccccc'
+          }}
+        >&nbsp;(List of images that you have annotated.)</span>
+      </h2>
       <Divider style={{ marginTop: '5px'}}/>
       {images.length < 1 ?
         <Alert
