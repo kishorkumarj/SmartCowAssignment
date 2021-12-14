@@ -1,0 +1,43 @@
+$text-base-color: #8898aa;
+
+.login-base-text{
+  color: $text-base-color;
+}
+
+.m-b-50{
+  margin-bottom: 50px;
+}
+
+.m-b-80{
+  margin-bottom: 80px;
+}
+
+.welcome-header-text{
+  font-size: 20px;
+  color: $text-base-color;
+  font-weight: 600;
+  text-align: center;
+}
+
+.login-container{
+  border-radius: 5px;
+  width: 350px;
+  height: 380px;
+  margin: 10px;
+  display: flex;
+  flex-direction: column;
+}
+
+.login-form-container{
+  margin-bottom: 70px;
+}
+
+.login-input-icon{
+  color: #bfbfbf
+}
+
+.action-link{
+  color: #3aa0ff;
+  font-size: 14px;
+  cursor: pointer;
+}

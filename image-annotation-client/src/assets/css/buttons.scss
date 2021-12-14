@@ -1,0 +1,98 @@
+@mixin button-theme($color, $text-color: #fff){
+  background-color: $color;
+  border-color: $color;
+  color: $text-color;
+  border-radius: .25rem;
+  box-shadow: 0 4px 6px rgba(50,50,93,.11),0 1px 3px rgba(0,0,0,.08);
+
+  &:hover{
+    background-color: darken($color, 10%);
+    border-color: darken($color, 10%);
+    color: $text-color;
+  }
+
+  &:focus{
+    background-color: $color;
+    border-color: $color;
+    color: $text-color;
+  }
+
+  &:disabled{
+    background-color: darken($color, 10%);
+    border-color: darken($color, 10%);
+    color: $text-color;
+    opacity: .55;
+    &:hover{
+      background-color: darken($color, 10%);
+      border-color: darken($color, 10%);
+      color: $text-color;
+      opacity: .55;
+    }
+  }
+}
+
+@mixin button-outlined-theme($color, $text-color: #fff){
+  background-color: #fff;
+  border-color: $color;
+  color: $color;
+  border-radius: .25rem;
+
+  &:hover{
+    background-color: $color;
+    border-color: $color;
+    color: $text-color;
+    box-shadow: 0 4px 6px rgba(50,50,93,.11),0 1px 3px rgba(0,0,0,.08);
+  }
+
+  &:focus{
+    background-color: $color;
+    border-color: $color;
+    color: $text-color;
+  }
+
+  &:disabled{
+    background-color: #fff;
+    border-color: darken($color, 10%);
+    color: $color;
+    opacity: .55;
+    
+    &:hover{
+      background-color: #fff;
+      border-color: $color;
+      color: $color;
+      opacity: .55;
+    }
+  }
+}
+
+.btn-success{
+  @include button-theme($color: #2dce89)
+}
+
+.btn-danger{
+  @include button-theme($color: #f5365c)
+}
+
+.btn-warning{
+  @include button-theme($color: orange, $text-color: #fff)
+}
+
+.btn-info{
+  @include button-theme($color: #11cdef)
+}
+
+.btn-success-outlined{
+  @include button-outlined-theme($color: #2dce89) 
+}
+
+.btn-danger-outlined{
+  @include button-outlined-theme($color: #f5365c)
+}
+
+.btn-warning-outlined{
+  @include button-outlined-theme($color: orange, $text-color: #fff)
+}
+
+.btn-info-outlined{
+  @include button-outlined-theme($color: #11cdef)
+}
